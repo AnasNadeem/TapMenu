@@ -1,0 +1,12 @@
+asgiref
+Django>3
+django-environ
+flake8>4
+importlib-metadata
+mccabe
+pycodestyle>1.8
+pyflakes
+pytz
+sqlparse
+typing_extensions
+zipp

@@ -16,25 +16,15 @@ class TimeBaseModel(models.Model):
         abstract = True
 
 
-class Address(TimeBaseModel):
-    street = models.CharField(max_length=100)
-    city = models.CharField(max_length=100)
-    state = models.CharField(max_length=2)
-    zip = models.CharField(max_length=5)
-
-    def __str__(self):
-        return f'{self.street}, {self.city}, {self.state} {self.zip}'
-
-
 class Restaurant(TimeBaseModel):
     name = models.CharField(max_length=100)
     one_liner = models.CharField(max_length=100)
     subdomain = AutoSlugField(custom_slugify, max_length=8, populate_from='name', unique=True)
-    address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True)
     phone = models.CharField(max_length=10)
     email = models.EmailField(max_length=100)
     website = models.URLField(max_length=100)
     logo = models.ImageField(upload_to='restaurant_logo', blank=True)
+    show_menu = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -46,6 +36,25 @@ class RestaurantImage(TimeBaseModel):
 
     def __str__(self):
         return self.restaurant.name
+
+
+class RestaurantAddress(TimeBaseModel):
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    street = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=2)
+    zip = models.CharField(max_length=5)
+
+    def __str__(self):
+        return f'{self.restaurant.name} - {self.city} {self.state}'
+
+
+class RestaurantMenuImage(TimeBaseModel):
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='restaurant_menu_images')
+
+    def __str__(self):
+        return self.name
 
 
 class Category(TimeBaseModel):
